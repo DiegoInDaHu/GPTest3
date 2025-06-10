@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/litera/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/custom.css" rel="stylesheet">
   </head>
   <body>
@@ -21,9 +21,8 @@ if (!isset($_SESSION['user_id'])) {
       <div class="bg-light border-end" id="sidebar-wrapper">
         <div class="sidebar-heading border-bottom bg-light">GPTest3</div>
         <div class="list-group list-group-flush">
-          <a href="#" class="list-group-item list-group-item-action list-group-item-light p-3">Dashboard</a>
-          <a href="#" class="list-group-item list-group-item-action list-group-item-light p-3">Profile</a>
-          <a href="#" class="list-group-item list-group-item-action list-group-item-light p-3">Settings</a>
+          <a href="dashboard.php" class="list-group-item list-group-item-action list-group-item-light p-3">Dashboard</a>
+          <a href="settings.php" class="list-group-item list-group-item-action list-group-item-light p-3">Ajustes</a>
         </div>
       </div>
       <!-- Page content -->
@@ -42,7 +41,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/custom.js"></script>
   </body>
 </html>

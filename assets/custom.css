@@ -18,4 +18,13 @@ body {
 #sidebarToggle {
   border: none;
   box-shadow: none;
+  position: absolute;
+  left: 1rem;
+}
+.sidebar-heading {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.navbar .container-fluid {
+  position: relative;
 }
