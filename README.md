@@ -23,6 +23,30 @@ sudo apt-get install php php-mysql
 
 Verifica la instalación con `which php`.
 
+## Dependencias locales
+
+Las librerías externas (Bootstrap, jQuery y DataTables) se encuentran en la
+carpeta `packages`. Todos los archivos HTML están configurados para cargarlas
+desde ahí en lugar de usar CDNs.
+
+## Comandos de puesta en marcha
+
+El archivo `setup_commands.txt` contiene los pasos básicos para preparar un
+entorno desde cero.
+
+## Tests
+
+Para comprobar la sintaxis de los archivos PHP puedes ejecutar:
+
+```bash
+php -l public/settings.php
+php -l public/login.php
+php -l public/dashboard.php
+```
+
+Si alguno de estos comandos falla, asegúrate de tener PHP instalado y revisa el
+código correspondiente.
+
 ## Ejecucion
 
 Coloca los archivos en un servidor web con soporte PHP (por ejemplo Apache) y abre `public/login.php` para iniciar sesión con el usuario `admin@example.com` y contraseña `admin`. Tras autenticarte serás redirigido al dashboard.
