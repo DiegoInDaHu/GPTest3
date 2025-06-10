@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/litera/bootstrap.min.css" rel="stylesheet">
+    <link href="../packages/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/custom.css" rel="stylesheet">
   </head>
   <body>
@@ -41,7 +41,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../packages/bootstrap.bundle.min.js"></script>
     <script src="../assets/custom.js"></script>
   </body>
 </html>

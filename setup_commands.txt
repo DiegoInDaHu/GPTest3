@@ -1,0 +1,7 @@
+sudo apt-get update
+sudo apt-get install -y php php-mysql
+mysql -u root -p < sql/init.sql
+php -l public/settings.php
+php -l public/login.php
+php -l public/dashboard.php
+php -S localhost:8000 -t public

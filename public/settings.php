@@ -8,16 +8,37 @@ if (!isset($_SESSION['user_id'])) {
 
 $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    if ($name && $email && $password) {
+    $action = $_POST['action'] ?? '';
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    $id = intval($_POST['id'] ?? 0);
+
+    if ($action === 'add' && $name && $email && $password) {
         $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
         $stmt->execute([$name, $email, $password]);
+    } elseif ($action === 'edit' && $id && $name && $email) {
+        $params = [$name, $email];
+        $sql = 'UPDATE users SET name = ?, email = ?';
+        if ($password !== '') {
+            $sql .= ', password = ?';
+            $params[] = $password;
+        }
+        $sql .= ' WHERE id = ?';
+        $params[] = $id;
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     } else {
         $err = 'Todos los campos son obligatorios';
     }
 }
+
+if (isset($_GET['delete'])) {
+    $id = intval($_GET['delete']);
+    $stmt = $pdo->prepare('DELETE FROM users WHERE id = ?');
+    $stmt->execute([$id]);
+}
+
 $users = $pdo->query('SELECT id, name, email FROM users')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
@@ -26,7 +47,8 @@ $users = $pdo->query('SELECT id, name, email FROM users')->fetchAll(PDO::FETCH_A
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ajustes</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/litera/bootstrap.min.css" rel="stylesheet">
+  <link href="../packages/bootstrap.min.css" rel="stylesheet">
+  <link href="../packages/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link href="../assets/custom.css" rel="stylesheet">
 </head>
 <body>
@@ -54,35 +76,65 @@ $users = $pdo->query('SELECT id, name, email FROM users')->fetchAll(PDO::FETCH_A
         <?php if($err): ?>
           <div class="alert alert-danger"><?= $err ?></div>
         <?php endif; ?>
-        <h3>Usuarios</h3>
-        <table class="table table-striped">
-          <thead><tr><th>ID</th><th>Nombre</th><th>Email</th></tr></thead>
+        <h3 class="d-flex justify-content-between">Usuarios
+          <button type="button" class="btn btn-primary btn-sm" id="addUserBtn">Nuevo</button>
+        </h3>
+        <table id="usersTable" class="table table-striped">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Acciones</th></tr>
+          </thead>
           <tbody>
           <?php foreach($users as $u): ?>
-            <tr><td><?= $u['id'] ?></td><td><?= htmlspecialchars($u['name']) ?></td><td><?= htmlspecialchars($u['email']) ?></td></tr>
+            <tr>
+              <td><?= $u['id'] ?></td>
+              <td><?= htmlspecialchars($u['name']) ?></td>
+              <td><?= htmlspecialchars($u['email']) ?></td>
+              <td>
+                <button type="button" class="btn btn-sm btn-secondary edit-btn" data-id="<?= $u['id'] ?>" data-name="<?= htmlspecialchars($u['name']) ?>" data-email="<?= htmlspecialchars($u['email']) ?>">Editar</button>
+                <a href="?delete=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')">Borrar</a>
+              </td>
+            </tr>
           <?php endforeach; ?>
           </tbody>
         </table>
-        <h4 class="mt-4">Nuevo usuario</h4>
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" class="form-control" name="name" required>
+
+        <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <form class="modal-content" method="POST">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Nuevo usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="id" id="user-id">
+                <input type="hidden" name="action" id="user-action" value="add">
+                <div class="mb-3">
+                  <label class="form-label">Nombre</label>
+                  <input type="text" class="form-control" name="name" id="user-name" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" id="user-email" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Contraseña</label>
+                  <input type="text" class="form-control" name="password" id="user-password">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
           </div>
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Contraseña</label>
-            <input type="text" class="form-control" name="password" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Agregar</button>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../packages/jquery.min.js"></script>
+  <script src="../packages/bootstrap.bundle.min.js"></script>
+  <script src="../packages/jquery.dataTables.min.js"></script>
+  <script src="../packages/dataTables.bootstrap5.min.js"></script>
   <script src="../assets/custom.js"></script>
 </body>
 </html>
