@@ -1,5 +1,10 @@
 <?php
 require_once dirname(__DIR__) . '/config/database.php';
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -23,9 +28,12 @@ require_once dirname(__DIR__) . '/config/database.php';
       </div>
       <!-- Page content -->
       <div id="page-content-wrapper">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-          <div class="container-fluid">
-            <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+        <nav class="navbar navbar-light bg-light border-bottom">
+          <div class="container-fluid d-flex align-items-center">
+            <button class="navbar-toggler me-2" type="button" id="sidebarToggle">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <span class="navbar-brand mb-0 h1">Dashboard</span>
           </div>
         </nav>
         <div class="container-fluid mt-4">
