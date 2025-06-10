@@ -13,3 +13,9 @@ body {
   padding: 20px;
 }
 #wrapper.toggled #sidebar-wrapper { margin-left: -250px; }
+
+/* clean navbar toggle button */
+#sidebarToggle {
+  border: none;
+  box-shadow: none;
+}
